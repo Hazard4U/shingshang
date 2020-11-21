@@ -146,12 +146,7 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
     }
 
     public Board getBoard(){
-        try{
-            return (Board) this.board.clone();
-        } catch (CloneNotSupportedException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return new Board(this.board);
     }
 
     private void capturePawn(Square square){

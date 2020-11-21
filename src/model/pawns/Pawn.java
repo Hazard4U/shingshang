@@ -6,11 +6,22 @@ import model.board.Square;
 import java.util.LinkedList;
 import java.util.Objects;
 
-public abstract class Pawn implements IPawn, Cloneable{
+public abstract class Pawn implements IPawn{
     protected int teamId;
     private int height;
     private int range;
     private boolean hasMove;
+
+    public Pawn(Pawn pawn){
+        if (pawn.getClass().equals(this.getClass())){
+            this.teamId = pawn.teamId;
+            this.height = pawn.height;
+            this.range = pawn.range;
+            this.hasMove = pawn.hasMove;
+        }else{
+            throw new IllegalArgumentException();
+        }
+    }
 
     public Pawn(int teamId, int height, int range) throws IllegalArgumentException{
         if (!Board.isValidTeamId(teamId)){
@@ -87,10 +98,5 @@ public abstract class Pawn implements IPawn, Cloneable{
     @Override
     public int hashCode() {
         return Objects.hash(teamId, height, range, hasMove);
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        return super.clone();
     }
 }

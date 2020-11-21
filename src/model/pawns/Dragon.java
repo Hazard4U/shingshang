@@ -6,6 +6,10 @@ public class Dragon extends Pawn {
     private static final int MAX_MOVE_RANGE = 0;
     private static final int HEIGHT = 3;
 
+    public Dragon(Pawn pawn){
+        super(pawn);
+    }
+
     public Dragon(int teamId)throws IllegalArgumentException {
         super(teamId, Dragon.HEIGHT, Dragon.MAX_MOVE_RANGE);
     }

@@ -2,12 +2,29 @@ package model.board;
 
 import model.pawns.Pawn;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.util.Objects;
 
-public class Square implements Cloneable{
+public class Square{
     private Pawn pawn;
     private int x;
     private int y;
+
+    public Square(Square square){
+        this.x = square.x;
+        this.y = square.y;
+        try {
+            if (null == square.pawn){
+                this.pawn = null;
+            }else{
+                Constructor<?> constructor = square.pawn.getClass().getConstructor(Pawn.class);
+                this.pawn = (Pawn) constructor.newInstance(square.pawn);
+            }
+        }catch (NoSuchMethodException | IllegalAccessException | InstantiationException | InvocationTargetException e){
+            throw new IllegalArgumentException();
+        }
+    }
 
     public Square(int x, int y){
         this.x = x;
@@ -56,13 +73,5 @@ public class Square implements Cloneable{
     @Override
     public int hashCode() {
         return Objects.hash(pawn, x, y);
-    }
-
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
-        Square newSquare = null;
-        newSquare = (Square) super.clone();
-        newSquare.pawn = (Pawn) pawn.clone();
-        return super.clone();
     }
 }

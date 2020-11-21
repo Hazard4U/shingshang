@@ -9,7 +9,7 @@ import model.movements.MovementsMap;
 
 import java.util.*;
 
-public class Board implements Cloneable{
+public class Board{
     private final int COLS = 10;
     private final int ROWS = 10;
     public static final int FIRST_TEAM_ID = 0;
@@ -22,6 +22,19 @@ public class Board implements Cloneable{
     private Player[] players;
     private Pawn movingPawn = null;
     private LinkedList<Pawn> movedPawnsInRound = new LinkedList<>();
+
+    public Board(Board board){
+        this.players = board.players;
+        this.board = new ArrayList<>();
+        int x = 0;
+        for (ArrayList<Square> column : board.board){
+            this.board.add(new ArrayList<>());
+            for (Square square : column){
+                this.board.get(x).add(new Square(square));
+            }
+            x++;
+        }
+    }
 
     public Board(Player[] players){
         if (players.length > 2){
@@ -37,7 +50,7 @@ public class Board implements Cloneable{
         return teamId == Board.FIRST_TEAM_ID || teamId == Board.SECOND_TEAM_ID || teamId == Board.NO_TEAM_ID;
     }
 
-    private Square getSquare(int x, int y) throws WrongCoordsException{
+    public Square getSquare(int x, int y) throws WrongCoordsException{
         if (!validCoords(x,y)){
             throw new WrongCoordsException("Coordonnées non valides");
         }
@@ -468,13 +481,5 @@ public class Board implements Cloneable{
         int result = Objects.hash(COLS, ROWS, board, movingPawn, movedPawnsInRound);
         result = 31 * result + Arrays.hashCode(players);
         return result;
-    }
-
-    @Override
-    public Object clone() throws CloneNotSupportedException {
-        Board newBoard = null;
-        newBoard = (Board) super.clone();
-        newBoard.board = (ArrayList<ArrayList<Square>>) this.board.clone();
-        return newBoard;
     }
 }
