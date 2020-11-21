@@ -1,29 +1,24 @@
-package model;
+package model.board;
 
 import model.pawns.Pawn;
 
 import java.util.Objects;
 
-public class Square {
-    private IPawn pawn;
+public class Square implements Cloneable{
+    private Pawn pawn;
     private int x;
     private int y;
 
-    public Square(IPawn pawn, int x, int y) {
-        this.pawn = pawn;
+    public Square(int x, int y){
         this.x = x;
         this.y = y;
     }
 
-    public Square(int x, int y){
-        this(null, x,y);
-    }
-
-    public IPawn getPawn() {
+    public Pawn getPawn() {
         return pawn;
     }
 
-    public void setPawn(IPawn pawn) {
+    public void setPawn(Pawn pawn) {
         this.pawn = pawn;
     }
 
@@ -54,11 +49,20 @@ public class Square {
         if (o == null || getClass() != o.getClass()) return false;
         Square square = (Square) o;
         return x == square.x &&
-                y == square.y;
+                y == square.y &&
+                Objects.equals(pawn, square.pawn);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y);
+        return Objects.hash(pawn, x, y);
+    }
+
+    @Override
+    protected Object clone() throws CloneNotSupportedException {
+        Square newSquare = null;
+        newSquare = (Square) super.clone();
+        newSquare.pawn = (Pawn) pawn.clone();
+        return super.clone();
     }
 }

@@ -1,4 +1,8 @@
-package model;
+package model.pawns;
+
+import model.board.Square;
+
+import java.util.LinkedList;
 
 public interface IPawn {
 
@@ -10,5 +14,8 @@ public interface IPawn {
 
     boolean canJump(Square fromSquare, Square betweenSquare, Square toSquare);
 
-    boolean canGo(Square fromSquare, Square toSquare);
+    boolean canGo(LinkedList<Square> squares);
+
+    boolean hasMove();
+
 }

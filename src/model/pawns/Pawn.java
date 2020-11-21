@@ -1,14 +1,16 @@
 package model.pawns;
 
-import model.Board;
-import model.IPawn;
-import model.Square;
+import model.board.Board;
+import model.board.Square;
 
-public abstract class Pawn implements IPawn {
-    private int teamId;
+import java.util.LinkedList;
+import java.util.Objects;
+
+public abstract class Pawn implements IPawn, Cloneable{
+    protected int teamId;
     private int height;
     private int range;
-    private Square position;
+    private boolean hasMove;
 
     public Pawn(int teamId, int height, int range) throws IllegalArgumentException{
         if (!Board.isValidTeamId(teamId)){
@@ -28,41 +30,67 @@ public abstract class Pawn implements IPawn {
     public int getMovementRange() { return this.range; }
 
     public boolean canJump(Square fromSquare, Square betweenSquare, Square toSquare){
-        return (!fromSquare.equals(toSquare)
+        int range = (int) Math.sqrt(Math.pow(fromSquare.getX()-toSquare.getX(),2)+Math.pow(fromSquare.getY()-toSquare.getY(),2));
+        int betweenSquareX = (fromSquare.getX()+toSquare.getX())/2;
+        int betweenSquareY = (fromSquare.getY()+toSquare.getY())/2;
+        return (
+                range == 2
+                && betweenSquare.getX() == betweenSquareX
+                && betweenSquare.getY() == betweenSquareY
                 && betweenSquare.hasPawn()
                 && this.getHeight() >= betweenSquare.getPawn().getHeight()
-                && !toSquare.hasPawn());
+                && !toSquare.hasPawn()
+                && directionNotChanged(fromSquare, toSquare));
     }
 
-    public boolean canGo(Square fromSquare, Square toSquare){
+    public boolean canGo(LinkedList<Square> squares){
+        Square fromSquare = squares.getFirst();
+        Square toSquare = squares.getLast();
+        boolean noPawnsOnRoad = true;
+        squares.removeFirst();
+        for (Square square : squares){
+            noPawnsOnRoad = !square.hasPawn() && noPawnsOnRoad;
+        }
         int range = (int) Math.sqrt(Math.pow(fromSquare.getX()-toSquare.getX(),2)+Math.pow(fromSquare.getY()-toSquare.getY(),2));
         return (range > 0
                 && range <= this.getMovementRange()
-                && !toSquare.hasPawn());
+                && directionNotChanged(fromSquare, toSquare)
+                && noPawnsOnRoad);
+    }
+
+    private boolean directionNotChanged(Square fromSquare, Square toSquare){
+        return fromSquare.getX() == toSquare.getX()
+                || fromSquare.getY() == toSquare.getY()
+                || Math.abs(fromSquare.getX()-toSquare.getX()) == Math.abs(fromSquare.getY()-toSquare.getY());
+    }
+
+    public void setHasMove(boolean hasMove) {
+        this.hasMove = hasMove;
     }
 
     @Override
-    public String toString() {
-        String color;
-        if (teamId == Board.FIRST_TEAM_ID){
-            color = "\u001B[37m";
-        }else{
-            color = "\u001B[30m";
-        }
-        switch (height){
-            case 1:{
-                return "\u001B[45m"+color+"| 1 |\u001B[0m";
-            }
-            case 2:{
-                return "\u001B[43m"+color+"| 2 |\u001B[0m";
-            }
-            case 3:{
-                return "\u001B[41m"+color+"| 3 |\u001B[0m";
-            }
-            case 4:{
-                return "\u001B[30m"+color+"| 4 |\u001B[0m";
-            }
-            default: return height+"";
-        }
+    public boolean hasMove() {
+        return hasMove;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Pawn pawn = (Pawn) o;
+        return teamId == pawn.teamId &&
+                height == pawn.height &&
+                range == pawn.range &&
+                hasMove == pawn.hasMove;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamId, height, range, hasMove);
+    }
+
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
     }
 }
