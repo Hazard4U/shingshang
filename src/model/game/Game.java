@@ -1,4 +1,4 @@
-package model;
+package model.game;
 
 import exceptions.*;
 import model.board.Board;
@@ -6,8 +6,8 @@ import model.board.Square;
 import model.pawns.Dragon;
 import model.pawns.IPawn;
 import model.player.Player;
-import movements.Movements;
-import movements.MovementsInformation;
+import model.movements.Movements;
+import model.movements.MovementsInformation;
 import observers.PlayerScoreObserver;
 import subjects.EndGameSubject;
 import subjects.PlayerRoundSubject;
@@ -102,7 +102,7 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
                 newRound = true;
             }else if (capturedPawnSquare != null){
                    capturePawn(capturedPawnSquare);
-                   this.board.finishMovePawn();
+                   this.board.finishPawnMove();
                    checkForWinner();
             }
         }else {
@@ -110,8 +110,8 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
         }
 
         if (newRound){
-            this.board.finishMovePawn();
-            this.board.resetMovedPawnStatus();
+            this.board.finishPawnMove();
+            this.board.resetMovedPawnsStatus();
             this.round++;
         }
         this.notifyPlayerForNewRound();
@@ -153,7 +153,7 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
                 this.secondPlayer.loseAPoint();
             }
         }
-        this.board.capturePawn(square);
+        this.board.deletePawnOnSquare(square);
     }
 
     public void addFirstPlayerScoreObservers(PlayerScoreObserver observer){

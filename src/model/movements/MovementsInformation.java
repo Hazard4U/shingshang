@@ -1,4 +1,4 @@
-package movements;
+package model.movements;
 
 import model.board.Square;
 

@@ -3,9 +3,9 @@ package model.board;
 import exceptions.*;
 import model.pawns.*;
 import model.player.Player;
-import movements.Movements;
-import movements.MovementsInformation;
-import movements.MovementsMap;
+import model.movements.Movements;
+import model.movements.MovementsInformation;
+import model.movements.MovementsMap;
 
 import java.util.*;
 
@@ -139,7 +139,7 @@ public class Board implements Cloneable{
                     Square square = this.getSquare(X, Y);
                     if (pawn.canGo(getSquaresBetween(currentSquare, square))) {
                         canContinue = true;
-                        availableGoToSquares.setSquareOfCapturedPawn(square, new MovementsInformation(Movements.WALK, null));
+                        availableGoToSquares.setMovementsInformation(square, new MovementsInformation(Movements.WALK, null));
                     }
                 }
             }while(canContinue && range < pawn.getMovementRange());
@@ -183,12 +183,12 @@ public class Board implements Cloneable{
                     if (adjacentSquare.getPawn().getTeamId() == pawn.getTeamId()){
                         // Si dans mon historique des déplacements déjà cherché la case cible n'existe pas je vais l'analyser
                         // Sinon je l'ignore pour éviter les boucles infinies
-                        if(availableJumpToSquares.getSquareOfCapturedPawn(targetSquare) == null){
-                            availableJumpToSquares.setSquareOfCapturedPawn(targetSquare, new MovementsInformation(Movements.JUMP, null));
+                        if(availableJumpToSquares.getMovementsInformation(targetSquare) == null){
+                            availableJumpToSquares.setMovementsInformation(targetSquare, new MovementsInformation(Movements.JUMP, null));
                             availableJumpToSquares = getAvailableJumpToSquares(pawn, targetSquare, availableJumpToSquares);
                         }
                     }else{
-                        availableJumpToSquares.setSquareOfCapturedPawn(targetSquare, new MovementsInformation(Movements.JUMP, adjacentSquare));
+                        availableJumpToSquares.setMovementsInformation(targetSquare, new MovementsInformation(Movements.JUMP, adjacentSquare));
                     }
                 }
             }
@@ -315,7 +315,7 @@ public class Board implements Cloneable{
      * Déclare la fin de déplacement du pion actuellement en déplacement
      * @throws PlayerNotPlayingException
      */
-    public void finishMovePawn() throws PlayerNotPlayingException{
+    public void finishPawnMove() throws PlayerNotPlayingException{
         if (this.movingPawn == null){
             throw new PlayerNotPlayingException("Le joueur n'a pas joué.");
         }
@@ -328,7 +328,7 @@ public class Board implements Cloneable{
     /**
      * Remet tous les pions déplacés durant le tour au statut non déplacé
      */
-    public void resetMovedPawnStatus(){
+    public void resetMovedPawnsStatus(){
         for (Pawn pawn : this.movedPawnsInRound){
             pawn.setHasMove(false);
         }
@@ -338,7 +338,7 @@ public class Board implements Cloneable{
      * Capture un pion du plateau
      * @param square
      */
-    public void capturePawn(Square square){
+    public void deletePawnOnSquare(Square square){
         IPawn pawnToCapture = square.getPawn();
         if (pawnToCapture == null){
             throw new NullPointerException("Pas de pion à capturer sur cette case");

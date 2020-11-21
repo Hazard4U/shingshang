@@ -1,5 +1,5 @@
 import exceptions.*;
-import model.Game;
+import model.game.Game;
 import model.board.Board;
 import observers.EndGameObserver;
 import observers.PlayerRoundObserver;

@@ -1,4 +1,4 @@
-package movements;
+package model.movements;
 
 import model.board.Square;
 
@@ -20,11 +20,11 @@ public class MovementsMap {
         return this.movementsHashMap;
     }
 
-    public MovementsInformation getSquareOfCapturedPawn(Square destination){
+    public MovementsInformation getMovementsInformation(Square destination){
         return this.movementsHashMap.get(destination);
     }
 
-    public void setSquareOfCapturedPawn(Square destination, MovementsInformation movementsInformation){
+    public void setMovementsInformation(Square destination, MovementsInformation movementsInformation){
         this.movementsHashMap.put(destination, movementsInformation);
     }
 
