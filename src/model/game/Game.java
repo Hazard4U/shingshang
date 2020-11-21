@@ -138,15 +138,20 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
     }
 
     private void notifyPlayerForNewRound(){
+        if (this.round % 2 == 0){
+            this.notifyFirstPlayerRoundObservers(getBoard());
+        }else{
+            this.notifySecondPlayerRoundObservers(getBoard());
+        }
+    }
+
+    public Board getBoard(){
         try{
-            if (this.round % 2 == 0){
-                this.notifyFirstPlayerRoundObservers((Board) this.board.clone());
-            }else{
-                this.notifySecondPlayerRoundObservers((Board) this.board.clone());
-            }
+            return (Board) this.board.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
+        return null;
     }
 
     private void capturePawn(Square square){
