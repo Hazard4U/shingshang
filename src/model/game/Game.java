@@ -17,6 +17,7 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
     private Player firstPlayer;
     private Player secondPlayer;
     private Board board;
+    private boolean gameOver;
 
     public Game(){
         this.firstPlayer = new Player(Board.FIRST_TEAM_ID);
@@ -34,6 +35,7 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
         secondPlayer.resetPoint();
         this.board.reset();
         this.round = 0;
+        this.gameOver = false;
     }
 
     /**
@@ -50,7 +52,7 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
      * @throws PawnAlreadyMovedInRoundException
      * @throws PlayerNotPlayingException
      */
-    public void firstPlayerMove(boolean skip, int[] fromSquareCoords, int[] toSquareCoords) throws NoPawnException, WrongCoordsException, WrongMovementException, MoveEnemyPawnException, WrongRoundException, OtherPawnAlreadyMovingException, PawnAlreadyMovedInRoundException, PlayerNotPlayingException {
+    public void firstPlayerMove(boolean skip, int[] fromSquareCoords, int[] toSquareCoords) throws NoPawnException, WrongCoordsException, WrongMovementException, MoveEnemyPawnException, WrongRoundException, OtherPawnAlreadyMovingException, PawnAlreadyMovedInRoundException, PlayerNotPlayingException, GameOverException {
         this.playerMove(this.firstPlayer, skip, fromSquareCoords, toSquareCoords);
     }
 
@@ -68,7 +70,7 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
      * @throws PawnAlreadyMovedInRoundException
      * @throws PlayerNotPlayingException
      */
-    public void secondPlayerMove(boolean skip, int[] fromSquareCoords, int[] toSquareCoords) throws NoPawnException, WrongCoordsException, WrongMovementException, MoveEnemyPawnException, WrongRoundException, PlayerNotPlayingException, OtherPawnAlreadyMovingException, PawnAlreadyMovedInRoundException {
+    public void secondPlayerMove(boolean skip, int[] fromSquareCoords, int[] toSquareCoords) throws NoPawnException, WrongCoordsException, WrongMovementException, MoveEnemyPawnException, WrongRoundException, PlayerNotPlayingException, OtherPawnAlreadyMovingException, PawnAlreadyMovedInRoundException, GameOverException {
         playerMove(this.secondPlayer, skip, fromSquareCoords, toSquareCoords);
     }
 
@@ -87,8 +89,10 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
      * @throws OtherPawnAlreadyMovingException
      * @throws PawnAlreadyMovedInRoundException
      */
-    private void playerMove(Player player, boolean skip, int[] fromSquareCoords, int[] toSquareCoords) throws NoPawnException, WrongCoordsException, WrongMovementException, MoveEnemyPawnException, WrongRoundException, PlayerNotPlayingException, OtherPawnAlreadyMovingException, PawnAlreadyMovedInRoundException {
-        if (player.getTeamId() == Board.FIRST_TEAM_ID && round % 2 != 0){
+    private void playerMove(Player player, boolean skip, int[] fromSquareCoords, int[] toSquareCoords) throws NoPawnException, WrongCoordsException, WrongMovementException, MoveEnemyPawnException, WrongRoundException, PlayerNotPlayingException, OtherPawnAlreadyMovingException, PawnAlreadyMovedInRoundException, GameOverException {
+        if (this.gameOver){
+            throw new GameOverException("La partie est terminée");
+        }else if (player.getTeamId() == Board.FIRST_TEAM_ID && round % 2 != 0){
             throw new WrongRoundException("Ce n'est pas au premier joueur de jouer");
         }else if(player.getTeamId() == Board.SECOND_TEAM_ID && round % 2 == 0){
             throw new WrongRoundException("Ce n'est pas au second joueur de jouer");
@@ -128,6 +132,7 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
         }
 
         if (winnerID != Board.NO_TEAM_ID){
+            this.gameOver = true;
             notifyEndGameObservers(winnerID);
         }
     }
