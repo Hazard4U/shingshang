@@ -7,10 +7,9 @@ import observers.PlayerScoreObserver;
 
 import java.util.Scanner;
 
-public class Main {
+public class MainTerminal {
     public static void main(String[] args) {
         try{
-            Scanner scanner = new Scanner( System.in );
             Game game = new Game();
             FirstPlayerObserver firstPlayerObserver = new FirstPlayerObserver(game);
             SecondPlayerObserver secondPlayerObserver = new SecondPlayerObserver(game);
@@ -28,6 +27,19 @@ public class Main {
 
     }
 
+    public static int[] readCoords(){
+        Scanner scanner = new Scanner( System.in );
+        System.out.print("\n0 pour passer\nX de départ:");
+        int coordsDepX = scanner.nextInt();
+        System.out.print("\n0 pour passer\nY de départ:");
+        int coordsDepY = scanner.nextInt();
+        System.out.print("\n0 pour passer\nX d'arriver:");
+        int coordsArrX = scanner.nextInt();
+        System.out.print("\n0 pour passer\nY d'arriver:");
+        int coordsArrY = scanner.nextInt();
+        return new int[]{coordsDepX, coordsDepY, coordsArrX, coordsArrY};
+    }
+
     public static class FirstPlayerObserver implements PlayerRoundObserver, PlayerScoreObserver, EndGameObserver{
         private Game game;
         FirstPlayerObserver(Game game){
@@ -39,25 +51,20 @@ public class Main {
             while (repeat){
                 repeat = false;
                 game.printBoard();
-                Scanner scanner = new Scanner( System.in );
-                int coordsDepX = scanner.nextInt();
-                int coordsDepY = scanner.nextInt();
-                int coordsArrX = scanner.nextInt();
-                int coordsArrY = scanner.nextInt();
-                System.out.println(coordsArrX);
+                int[] coords = readCoords();
                 try{
-                    if (coordsDepX == 0 && coordsDepY == 0 && coordsArrX == 0 && coordsArrY == 0){
+                    if (coords[0] == 0 && coords[1] == 0 && coords[2] == 0 && coords[3] == 0){
                         game.firstPlayerMove(true,null, null);
                     }else{
-                        System.out.println(board.toStringMovements(new int[]{coordsDepX, coordsDepY}));
-                        game.firstPlayerMove(false,new int[]{coordsDepX, coordsDepY}, new int[]{coordsArrX, coordsArrY});
+                        System.out.println(board.toStringMovements(new int[]{coords[0], coords[1]}));
+                        System.out.println(board.toString());
+                        game.firstPlayerMove(false,new int[]{coords[0], coords[1]}, new int[]{coords[2], coords[3]});
                     }
-                }catch (MoveEnemyPawnException | NoPawnException | WrongCoordsException | WrongMovementException | PawnAlreadyMovedInRoundException | OtherPawnAlreadyMovingException | PlayerNotPlayingException e){
+                }catch (MoveEnemyPawnException | NoPawnException | WrongCoordsException | WrongMovementException | PawnAlreadyMovedInRoundException | OtherPawnAlreadyMovingException | PlayerNotPlayingException | GameOverException e){
                     repeat = true;
                     System.out.println(e.getMessage());
                 } catch (WrongRoundException e) {
                     System.out.println(e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }
@@ -90,25 +97,20 @@ public class Main {
             while (repeat){
                 repeat = false;
                 game.printBoard();
-                Scanner scanner = new Scanner( System.in );
-                int coordsDepX = scanner.nextInt();
-                int coordsDepY = scanner.nextInt();
-                int coordsArrX = scanner.nextInt();
-                int coordsArrY = scanner.nextInt();
+                int[] coords = readCoords();
                 try{
-                    if (coordsDepX == 0 && coordsDepY == 0 && coordsArrX == 0 && coordsArrY == 0){
+                    if (coords[0] == 0 && coords[1] == 0 && coords[2] == 0 && coords[3] == 0){
                         game.secondPlayerMove(true,null, null);
                     }else{
-                        System.out.println(board.toStringMovements(new int[]{coordsDepX, coordsDepY}));
-                        board.reset();
-                        game.secondPlayerMove(false,new int[]{coordsDepX, coordsDepY}, new int[]{coordsArrX, coordsArrY});
+                        System.out.println(board.toStringMovements(new int[]{coords[0], coords[1]}));
+                        System.out.println(board.toString());
+                        game.secondPlayerMove(false,new int[]{coords[0], coords[1]}, new int[]{coords[2], coords[3]});
                     }
-                }catch (MoveEnemyPawnException | NoPawnException | WrongCoordsException | WrongMovementException | PawnAlreadyMovedInRoundException | OtherPawnAlreadyMovingException | PlayerNotPlayingException e){
+                }catch (MoveEnemyPawnException | NoPawnException | WrongCoordsException | WrongMovementException | PawnAlreadyMovedInRoundException | OtherPawnAlreadyMovingException | PlayerNotPlayingException | GameOverException e){
                     repeat = true;
                     System.out.println(e.getMessage());
                 } catch (WrongRoundException e) {
                     System.out.println(e.getMessage());
-                    e.printStackTrace();
                 }
             }
         }
