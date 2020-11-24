@@ -53,11 +53,10 @@ public class Square{
 
     @Override
     public String toString() {
-        return "Square{" +
-                "pawn=" + pawn +
-                ", x=" + x +
-                ", y=" + y +
-                '}';
+        return hasPawn() ?
+                "|"+getPawn().toString()+"|"
+                :
+                "|   |";
     }
 
     @Override

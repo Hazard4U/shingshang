@@ -18,10 +18,10 @@ public class Lion extends Pawn {
     public String toString() {
         String color;
         if (teamId == Board.FIRST_TEAM_ID){
-            color = "\u001B[37m";
+            color = "\u001B[41m";
         }else{
-            color = "\u001B[30m";
+            color = "\u001B[44m";
         }
-        return "\u001B[43m"+color+"| 2 |\u001B[0m";
+        return "\u001B[30m"+color+" L \u001B[0m";
     }
 }

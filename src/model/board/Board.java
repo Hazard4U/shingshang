@@ -31,7 +31,7 @@ public class Board{
             this.board.add(new ArrayList<>());
             for (Square square : column){
                 if(square instanceof Portal){
-                    this.board.get(x).add(new Portal(square));
+                    this.board.get(x).add(new Portal((Portal)square));
                 }else{
                     this.board.get(x).add(new Square(square));
                 }
@@ -115,10 +115,10 @@ public class Board{
                 }
             }
 
-            this.board.get(Board.firstPlayerPortals[0][0]).set(Board.firstPlayerPortals[0][1], new Portal(Board.firstPlayerPortals[0][0], Board.firstPlayerPortals[0][1]));
-            this.board.get(Board.firstPlayerPortals[1][0]).set(Board.firstPlayerPortals[1][1], new Portal(Board.firstPlayerPortals[1][0], Board.firstPlayerPortals[1][1]));
-            this.board.get(Board.secondPlayerPortals[0][0]).set(Board.secondPlayerPortals[0][1], new Portal(Board.secondPlayerPortals[0][0], Board.secondPlayerPortals[0][1]));
-            this.board.get(Board.secondPlayerPortals[1][0]).set(Board.secondPlayerPortals[1][1], new Portal(Board.secondPlayerPortals[1][0], Board.secondPlayerPortals[1][1]));
+            this.board.get(Board.firstPlayerPortals[0][0]).set(Board.firstPlayerPortals[0][1], new Portal(Board.firstPlayerPortals[0][0], Board.firstPlayerPortals[0][1], Board.FIRST_TEAM_ID));
+            this.board.get(Board.firstPlayerPortals[1][0]).set(Board.firstPlayerPortals[1][1], new Portal(Board.firstPlayerPortals[1][0], Board.firstPlayerPortals[1][1], Board.FIRST_TEAM_ID));
+            this.board.get(Board.secondPlayerPortals[0][0]).set(Board.secondPlayerPortals[0][1], new Portal(Board.secondPlayerPortals[0][0], Board.secondPlayerPortals[0][1], Board.SECOND_TEAM_ID));
+            this.board.get(Board.secondPlayerPortals[1][0]).set(Board.secondPlayerPortals[1][1], new Portal(Board.secondPlayerPortals[1][0], Board.secondPlayerPortals[1][1], Board.SECOND_TEAM_ID));
 
             //Ajout des murs pour former le terrain correct
             for (int i = 0; i < 4; i++){
@@ -444,7 +444,6 @@ public class Board{
             squareSet.addAll(getAvailableMovements(fromSquare).getHashMap().keySet());
         }
         StringBuilder boardString = new StringBuilder();
-        boardString.append("Board{").append("COLS=").append(COLS).append(", ROWS=").append(ROWS).append(", board=\n");
         boardString.append("    \u001B[32m 0    1    2    3    4    5    6    7    8    9 \u001B[0m\n");
         boardString.append("    ---  ---  ---  ---  ---  ---  ---  ---  ---  ---\n");
         try{
@@ -452,13 +451,10 @@ public class Board{
                 boardString.append("\u001B[32m").append(i).append(" \u001B[0m|");
                 for (int j = 0; j < ROWS; j++){
                     Square square = this.getSquare(j,i);
-                    IPawn pawn = square.getPawn();
                     if(squareSet.contains(square)){
                         boardString.append("| \u001B[31mX\u001B[0m |");
-                    }else if (pawn == null){
-                        boardString.append("|   |");
                     }else{
-                        boardString.append(pawn.toString());
+                        boardString.append(square.toString());
                     }
                 }
                 boardString.append("| \u001B[32m").append(i).append("\u001B[0m\n");
