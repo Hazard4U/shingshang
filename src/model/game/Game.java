@@ -123,16 +123,20 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
         }
     }
 
-    private void checkForWinner(){
+    public int winner(){
         int winnerID;
         if (this.firstPlayer.getScore() <= 0){
             winnerID = Board.SECOND_TEAM_ID;
         }else if (this.secondPlayer.getScore() <= 0) {
             winnerID = Board.FIRST_TEAM_ID;
         }else{
-            winnerID = this.board.winner();
+            winnerID = this.board.winnerOnPortal();
         }
+        return winnerID;
+    }
 
+    private void checkForWinner(){
+        int winnerID = winner();
         if (winnerID != Board.NO_TEAM_ID){
             this.gameOver = true;
             notifyEndGameObservers(winnerID);

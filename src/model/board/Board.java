@@ -373,7 +373,7 @@ public class Board{
      * retourne l'identifiant de l'équipe gagnant est Board.NO_TEAM_ID si non
      * @return
      */
-    public int winner(){
+    public int winnerOnPortal(){
         Square[] portalsFirstTeam = new Square[2];
         Square[] portalsSecondTeam = new Square[2];
         int looser = NO_TEAM_ID;
