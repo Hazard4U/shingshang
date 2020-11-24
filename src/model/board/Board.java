@@ -30,7 +30,11 @@ public class Board{
         for (ArrayList<Square> column : board.board){
             this.board.add(new ArrayList<>());
             for (Square square : column){
-                this.board.get(x).add(new Square(square));
+                if(square instanceof Portal){
+                    this.board.get(x).add(new Portal(square));
+                }else{
+                    this.board.get(x).add(new Square(square));
+                }
             }
             x++;
         }
@@ -110,6 +114,11 @@ public class Board{
                     this.board.get(i).add(new Square(i,j));
                 }
             }
+
+            this.board.get(Board.firstPlayerPortals[0][0]).set(Board.firstPlayerPortals[0][1], new Portal(Board.firstPlayerPortals[0][0], Board.firstPlayerPortals[0][1]));
+            this.board.get(Board.firstPlayerPortals[1][0]).set(Board.firstPlayerPortals[1][1], new Portal(Board.firstPlayerPortals[1][0], Board.firstPlayerPortals[1][1]));
+            this.board.get(Board.secondPlayerPortals[0][0]).set(Board.secondPlayerPortals[0][1], new Portal(Board.secondPlayerPortals[0][0], Board.secondPlayerPortals[0][1]));
+            this.board.get(Board.secondPlayerPortals[1][0]).set(Board.secondPlayerPortals[1][1], new Portal(Board.secondPlayerPortals[1][0], Board.secondPlayerPortals[1][1]));
 
             //Ajout des murs pour former le terrain correct
             for (int i = 0; i < 4; i++){
@@ -380,14 +389,14 @@ public class Board{
         }
 
         for (Square portal : portalsFirstTeam){
-            if (portal.getPawn() != null){
+            if (portal.hasPawn()){
                 if (portal.getPawn() instanceof Dragon && portal.getPawn().getTeamId() == SECOND_TEAM_ID){
                     looser = SECOND_TEAM_ID;
                 }
             }
         }
         for (Square portal : portalsSecondTeam){
-            if (portal.getPawn() != null){
+            if (portal.hasPawn()){
                 if (portal.getPawn() instanceof Dragon && portal.getPawn().getTeamId() == FIRST_TEAM_ID){
                     looser = FIRST_TEAM_ID;
                 }
@@ -461,6 +470,10 @@ public class Board{
         }
         boardString.append("    \u001B[32m 0    1    2    3    4    5    6    7    8    9 \u001B[0m\n");
         return boardString.append("}").toString();
+    }
+
+    public ArrayList<ArrayList<Square>> getBoard() {
+        return board;
     }
 
     @Override
