@@ -118,7 +118,9 @@ public class Game implements EndGameSubject, PlayerRoundSubject {
             this.board.resetMovedPawnsStatus();
             this.round++;
         }
-        this.notifyPlayerForNewRound();
+        if (!this.gameOver){
+            this.notifyPlayerForNewRound();
+        }
     }
 
     private void checkForWinner(){

@@ -57,13 +57,12 @@ public class MainTerminal {
                         game.firstPlayerMove(true,null, null);
                     }else{
                         System.out.println(board.toStringMovements(new int[]{coords[0], coords[1]}));
-                        System.out.println(board.toString());
                         game.firstPlayerMove(false,new int[]{coords[0], coords[1]}, new int[]{coords[2], coords[3]});
                     }
-                }catch (MoveEnemyPawnException | NoPawnException | WrongCoordsException | WrongMovementException | PawnAlreadyMovedInRoundException | OtherPawnAlreadyMovingException | PlayerNotPlayingException | GameOverException e){
+                }catch (MoveEnemyPawnException | NoPawnException | WrongCoordsException | WrongMovementException | PawnAlreadyMovedInRoundException | OtherPawnAlreadyMovingException | PlayerNotPlayingException e){
                     repeat = true;
                     System.out.println(e.getMessage());
-                } catch (WrongRoundException e) {
+                } catch (WrongRoundException | GameOverException e) {
                     System.out.println(e.getMessage());
                 }
             }
@@ -106,10 +105,10 @@ public class MainTerminal {
                         System.out.println(board.toString());
                         game.secondPlayerMove(false,new int[]{coords[0], coords[1]}, new int[]{coords[2], coords[3]});
                     }
-                }catch (MoveEnemyPawnException | NoPawnException | WrongCoordsException | WrongMovementException | PawnAlreadyMovedInRoundException | OtherPawnAlreadyMovingException | PlayerNotPlayingException | GameOverException e){
+                }catch (MoveEnemyPawnException | NoPawnException | WrongCoordsException | WrongMovementException | PawnAlreadyMovedInRoundException | OtherPawnAlreadyMovingException | PlayerNotPlayingException e){
                     repeat = true;
                     System.out.println(e.getMessage());
-                } catch (WrongRoundException e) {
+                } catch (WrongRoundException | GameOverException e) {
                     System.out.println(e.getMessage());
                 }
             }
