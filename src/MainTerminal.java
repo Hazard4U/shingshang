@@ -102,7 +102,6 @@ public class MainTerminal {
                         game.secondPlayerMove(true,null, null);
                     }else{
                         System.out.println(board.toStringMovements(new int[]{coords[0], coords[1]}));
-                        System.out.println(board.toString());
                         game.secondPlayerMove(false,new int[]{coords[0], coords[1]}, new int[]{coords[2], coords[3]});
                     }
                 }catch (MoveEnemyPawnException | NoPawnException | WrongCoordsException | WrongMovementException | PawnAlreadyMovedInRoundException | OtherPawnAlreadyMovingException | PlayerNotPlayingException e){
